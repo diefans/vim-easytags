@@ -51,5 +51,10 @@ def easytags_gensyncmd(tagsfiles, filetype, tagkinds, syntaxgroup, prefix, suffi
     return ' | '.join(commands)
 
 def _easytags_makecmd(syntaxgroup, prefix, suffix, patterns, ignoresyntax):
+    if vim.eval('g:easytags_syntax_keyword') == 1:
+        # see https://github.com/xolox/vim-easytags/issues/68#issuecomment-28480981
+        template = r'syntax keyword %s %s containedin=ALLBUT,%s'
+        return template % (syntaxgroup, r' '.join(patterns), ignoresyntax)
+
     template = r'syntax match %s /%s\%%(%s\)%s/ containedin=ALLBUT,%s'
     return template % (syntaxgroup, prefix, r'\|'.join(patterns), suffix, ignoresyntax)
